@@ -1,18 +1,19 @@
 class TasksController < ApplicationController
-  before _action :set_project, only [:show, :update, :edit, :destroy, :complete]
+  before_action :set_project
 
   def create
-    @task = @project.task.create(task_params)
-
+    @task = @project.tasks.create(task_params)
     redirect_to @project
   end
-end
 
-
-
-
-
-
+  def destroy
+    @task = @project.tasks.find(params[:id])
+    if @task.destroy
+      flash[:success] = "Task was deleted"
+    else flash[:error] = "Task was not deleted"
+    end
+    redirect_to @project
+  end
 
 private
   def set_project
@@ -20,6 +21,6 @@ private
   end
 
   def task_params
-      params[:tasks].permit(:content))
+      params[:task].permit(:content)
   end
 end
